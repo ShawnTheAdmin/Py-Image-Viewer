@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter.filedialog import askdirectory
 from PIL import ImageTk, Image
 from os import listdir
-from os.path import join, isdir
+from os.path import join
 
 
 class Viewer:
@@ -62,12 +62,20 @@ class Viewer:
         """ Opens a folder designated by the user. """
         self.current_photo = 0
         self.folder = askdirectory()
-        self.photos = [
-            p for p in listdir(self.folder) if isdir(join(self.folder, p)) is False
-        ]
-        self.total_photos = len(self.photos) - 1
-        self.get_photo()
-        self.progress_bar()
+        if (len(listdir(self.folder)) - 1) != 0:
+            self.photos = [
+                p
+                for p in listdir(self.folder)
+                if p.endswith(".png") or p.endswith(".jpg") or p.endswith(".gif")
+            ]
+            self.total_photos = len(self.photos) - 1
+            self.get_photo()
+            self.progress_bar()
+        else:
+            lbl_img.configure(
+                text=f"'{self.folder}' is empty or contains no photos. Choose another folder."
+            )
+            lbl_img.image = f"'{self.folder}' is empty or contains no photos. Choose another folder."
 
 
 viewer = Viewer()
@@ -85,7 +93,7 @@ lbl_img = tk.Label(window)
 btn_previous = tk.Button(
     window, width=5, text="\N{MUCH LESS-THAN}", command=viewer.prev_photo
 )
-btn_open = tk.Button(window, width=10, text="Open", command=viewer.open_folder)
+btn_open = tk.Button(window, width=10, text="Open Folder", command=viewer.open_folder)
 btn_quit = tk.Button(window, width=10, text="Quit", command=window.quit)
 btn_next = tk.Button(
     window, width=5, text="\N{MUCH GREATER-THAN}", command=viewer.next_photo
