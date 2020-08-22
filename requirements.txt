@@ -1,0 +1,4 @@
+# requirments without version numbers
+tkinter
+pillow
+os
